@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Center</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563EB",
+              secondary: "#64748B",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              pacifico: ["Pacifico", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        background-color: white;
+      }
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-inter">
+    <!-- Sidebar (Fixed) -->
+    <div
+      class="w-64 bg-white shadow-lg flex flex-col fixed top-0 left-0 h-screen z-30"
+    >
+      <!-- Logo -->
+      <div class="p-6 border-b border-gray-200">
+        <h1 class="text-2xl font-pacifico text-primary">Car Center</h1>
+        <p class="text-sm text-secondary mt-1">We have the best.</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 p-4 overflow-y-auto">
+        <ul class="space-y-2">
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-white bg-primary rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-car-line"></i>
+              </div>
+              Prducts
+            </a>
+          </li>
+          <li>
+            <a
+              href="/orders"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-shopping-cart-line"></i>
+              </div>
+              My Orders
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-money-dollar-circle-line"></i>
+              </div>
+              My Payments
+            </a>
+          </li>
+          <li>
+            <a
+              href="/profile"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-user-line"></i>
+              </div>
+              My Profile
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex flex-col h-screen">
+      <!-- Header (Fixed) -->
+      <header
+        class="bg-white shadow-sm border-b border-gray-200 px-6 py-4 fixed top-0 left-64 right-0 z-20"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <h2 class="text-xl font-semibold text-gray-800">Products</h2>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <!-- Search -->
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Qidirish..."
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-64"
+              />
+              <div
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center"
+              >
+                <i class="ri-search-line text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <button class="relative p-2 text-gray-400 hover:text-gray-600">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-notification-line"></i>
+              </div>
+              <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >3</span
+              >
+            </button>
+
+            <!-- Profile -->
+            <div class="relative">
+              <div
+                  id="profileBtn"
+                  class="flex items-center space-x-3 cursor-pointer select-none"
+                >
+                <div class="w-8 h-8 rounded-full overflow-hidden">
+                  <img src="" alt="User avatar" class="profileImg w-full h-full object-cover" />
+                </div>
+                  <div class="text-sm">
+                    <p class="fName font-medium text-gray-800">Aziz Karimov</p>
+                    <p class="role text-gray-500">Super Admin</p>
+                  </div>
+                  <div
+                    class="w-4 h-4 flex items-center justify-center transition-transform duration-200"
+                    id="arrowIcon"
+                  >
+                    <i class="ri-arrow-down-s-line text-gray-400"></i>
+                  </div>
+                </div>
+
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50"
+              >
+                <ul class="py-1 text-gray-700">
+                  <li>
+                    <a
+                      href="/profile"
+                      class="block px-4 py-2 hover:bg-gray-100 transition-colors"
+                      >Profilni ko‘rish</a
+                    >
+                  </li>
+                  <li>
+                    <hr class="my-1 border-gray-200" />
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-red-600 hover:bg-red-100 transition-colors"
+                      >Log Out</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Kontent -->
+      <main class="flex-1 overflow-y-auto pt-28 px-6 py-3">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Reusable card -->
+          <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 p-6 border border-gray-100 relative"
+          >
+            <!-- Top badge -->
+            <div class="absolute top-4 right-4 flex items-center space-x-1">
+              <span class="text-sm font-semibold text-blue-600">+12%</span>
+              <span
+                class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full"
+                >↑</span
+              >
+            </div>
+
+            <div class="flex items-center mb-4">
+              <div
+                class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="ri-car-line text-blue-600 text-2xl"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-500">Jami Carlar</p>
+                <p class="text-3xl font-bold text-gray-900">248</p>
+              </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="mt-3">
+              <div class="flex justify-between text-sm mb-1 text-gray-500">
+                <span>To'liq quvvat</span>
+                <span>75%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded-full">
+                <div
+                  class="h-2 bg-blue-500 rounded-full transition-all duration-500"
+                  style="width: 75%"
+                ></div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              O‘tgan haftaga nisbatan o‘sdi
+            </p>
+          </div>
+
+          <!-- Faol Carlar -->
+          <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 p-6 border border-gray-100 relative"
+          >
+            <div class="absolute top-4 right-4 flex items-center space-x-1">
+              <span class="text-sm font-semibold text-green-600">+5%</span>
+              <span
+                class="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full"
+                >↑</span
+              >
+            </div>
+            <div class="flex items-center mb-4">
+              <div
+                class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="ri-check-line text-green-600 text-2xl"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-500">Faol Carlar</p>
+                <p class="text-3xl font-bold text-gray-900">186</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-sm mb-1 text-gray-500">
+                <span>Ishga tayyor</span>
+                <span>60%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded-full">
+                <div
+                  class="h-2 bg-green-500 rounded-full"
+                  style="width: 60%"
+                ></div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Ish faoliyati o‘smoqda</p>
+          </div>
+
+          <!-- Ta'mirlashda -->
+          <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 p-6 border border-gray-100 relative"
+          >
+            <div class="absolute top-4 right-4 flex items-center space-x-1">
+              <span class="text-sm font-semibold text-yellow-600">-2%</span>
+              <span
+                class="text-xs bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full"
+                >↓</span
+              >
+            </div>
+            <div class="flex items-center mb-4">
+              <div
+                class="w-14 h-14 bg-yellow-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="ri-tools-line text-yellow-600 text-2xl"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-500">Ta'mirlashda</p>
+                <p class="text-3xl font-bold text-gray-900">24</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-sm mb-1 text-gray-500">
+                <span>Hozirgi holat</span>
+                <span>20%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded-full">
+                <div
+                  class="h-2 bg-yellow-500 rounded-full"
+                  style="width: 20%"
+                ></div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              Ta'mirlashda biroz pasayish bor
+            </p>
+          </div>
+
+          <!-- Ishlamayotgan -->
+          <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 p-6 border border-gray-100 relative"
+          >
+            <div class="absolute top-4 right-4 flex items-center space-x-1">
+              <span class="text-sm font-semibold text-red-600">+3%</span>
+              <span
+                class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full"
+                >↑</span
+              >
+            </div>
+            <div class="flex items-center mb-4">
+              <div
+                class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="ri-close-line text-red-600 text-2xl"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-gray-500">Ishlamayotgan</p>
+                <p class="text-3xl font-bold text-gray-900">38</p>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-sm mb-1 text-gray-500">
+                <span>To'liq nosoz</span>
+                <span>40%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded-full">
+                <div
+                  class="h-2 bg-red-500 rounded-full"
+                  style="width: 40%"
+                ></div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">Nosozlar soni ortmoqda</p>
+          </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div
+          class="bg-white rounded-lg shadow-sm border border-gray-100 p-8 mb-8"
+        >
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex-1 relative">
+              <div
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center"
+              >
+                <i class="ri-search-line text-gray-400"></i>
+              </div>
+              <input
+                type="text"
+                placeholder="Avtomobil nomi yoki modeli bo'yicha qidirish..."
+                class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm bg-gray-50"
+              />
+            </div>
+            <div class="flex gap-4">
+              <div class="relative">
+                <select
+                  class="appearance-none bg-gray-50 px-4 py-3 pr-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm min-w-[160px]"
+                >
+                  <option>Barcha Markalar</option>
+                  <option>Tesla</option>
+                  <option>BMW</option>
+                  <option>Mercedes</option>
+                  <option>Audi</option>
+                  <option>Porsche</option>
+                </select>
+                <div
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                >
+                  <i class="ri-arrow-down-s-line text-gray-400"></i>
+                </div>
+              </div>
+              <div class="relative">
+                <select
+                  class="appearance-none bg-gray-50 px-4 py-3 pr-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm min-w-[160px]"
+                >
+                  <option>Barcha Turlari</option>
+                  <option>Elektromobil</option>
+                  <option>Gibrid</option>
+                  <option>Benzin</option>
+                </select>
+                <div
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                >
+                  <i class="ri-arrow-down-s-line text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Cars Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Car Cards -->
+          <!-- Tesla Model S -->
+          <% car.forEach(item => { %>
+          <div
+            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div class="h-64 bg-gray-100 relative">
+              <img
+                src="<%= item.image_url ? item.image_url : '/default-car.jpg' %>"
+                alt="<%= item.model_name %>"
+                class="w-full h-full object-cover object-center"
+              />
+              <div class="absolute top-4 right-4">
+                <span
+                  class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1.5 rounded-full"
+                >
+                  <%= item.fuelType %>
+                </span>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xl font-bold text-gray-900">
+                  <%= item.model_name %>
+                </h3>
+                <span class="text-lg font-semibold text-primary"
+                  ><%= item.year %></span
+                >
+              </div>
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-500 mb-1">Quvvat</p>
+                  <p class="text-sm font-medium"><%= item.car_hp %> ot kuchi</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-500 mb-1">Motor</p>
+                  <p class="text-sm font-medium"><%= item.motor_liter %> L</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-500 mb-1">Tezlanish</p>
+                  <p class="text-sm font-medium"><%= item.acceleration %></p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-500 mb-1">Maksimal tezlik</p>
+                  <p class="text-sm font-medium"><%= item.max_speeds %></p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <a
+                  href="/clientCarDetails/<%= item.car_id %>"
+                  class="flex-1 bg-primary text-white py-3 px-4 rounded-button text-sm hover:bg-blue-600 transition-colors"
+                >
+                  Batafsil ma'lumot
+                </a>
+                <button
+                  class="w-10 h-10 border border-gray-200 rounded-button flex items-center justify-center hover:bg-gray-50 transition-colors"
+                >
+                  <i class="ri-heart-line text-gray-600"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-8">
+          <div class="text-sm text-secondary">
+            1-8 dan 248 ta natija ko'rsatilmoqda
+          </div>
+          <div class="flex items-center space-x-2">
+            <button
+              class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              <div class="w-4 h-4 flex items-center justify-center">
+                <i class="ri-arrow-left-line"></i>
+              </div>
+            </button>
+            <button class="px-3 py-2 bg-primary text-white rounded-lg">
+              1
+            </button>
+            <button
+              class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              2
+            </button>
+            <button
+              class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              3
+            </button>
+            <span class="px-2 text-secondary">...</span>
+            <button
+              class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              31
+            </button>
+            <button
+              class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <div class="w-4 h-4 flex items-center justify-center">
+                <i class="ri-arrow-right-line"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/js/client.index.js"></script>
+  </body>
+</html>

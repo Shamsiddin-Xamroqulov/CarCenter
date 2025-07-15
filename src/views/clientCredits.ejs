@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= car.brand_name %> <%= car.model_name %> - Kredit rasmiylashtirish
+    </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-br from-indigo-50 to-white text-gray-900 min-h-screen flex items-center justify-center"
+  >
+    <% let downPaymentRatio = 0.3; if (car.price < 10000) { downPaymentRatio =
+    0.2; } else if (car.price >= 25000) { downPaymentRatio = 0.4; } const
+    recommendedDownPayment = (car.price * downPaymentRatio).toFixed(2); %>
+
+    <main class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-6 space-y-8">
+      <h1 class="text-2xl font-bold text-indigo-700 text-center mb-4">
+        Kredit rasmiylashtirish
+      </h1>
+
+      <!-- Mashina va narx -->
+      <section
+        class="flex flex-col md:flex-row md:justify-between items-center gap-4 md:gap-0"
+      >
+        <div class="text-base font-medium text-gray-700">
+          <p>
+            <span class="text-gray-500 font-normal">Mashina:</span> <%=
+            car.brand_name %> <%= car.model_name %>
+          </p>
+          <p class="mt-1">
+            <span class="text-gray-500 font-normal">Jami narx:</span>
+            <span class="text-indigo-600 text-xl font-bold"
+              ><%= car.price.toLocaleString() %> $</span
+            >
+          </p>
+        </div>
+        <img
+          src="<%= car.image_url || '/placeholder-car.png' %>"
+          alt="Car image"
+          class="w-40 h-28 object-cover rounded-md shadow"
+        />
+      </section>
+
+      <!-- Boshlang'ich to'lov -->
+      <section class="space-y-1">
+        <label
+          for="downPayment"
+          class="block text-base font-medium text-gray-700"
+          >Boshlang‘ich to‘lov ($):</label
+        >
+        <input
+          type="number"
+          id="downPayment"
+          class="w-full md:w-40 text-lg border border-indigo-300 rounded-lg p-3 font-semibold text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+          min="0"
+          max="<%= car.price %>"
+          value="<%= recommendedDownPayment %>"
+          step="0.01"
+        />
+        <p class="text-sm text-gray-500">
+          Tavsiya etilgan boshlang‘ich to‘lov: <%= recommendedDownPayment %> $
+          (<%= (downPaymentRatio * 100) %>%) | Jami narx: <%=
+          car.price.toLocaleString() %> $
+        </p>
+      </section>
+
+      <!-- Foiz stavkasi -->
+      <section class="flex justify-between items-center">
+        <span class="text-base text-gray-700">Foiz stavkasi (yillik):</span>
+        <span id="interestRate" class="text-indigo-600 font-semibold text-lg"
+          >10%</span
+        >
+      </section>
+
+      <!-- Oylar soni tanlash -->
+      <section class="space-y-1">
+        <label
+          for="monthCount"
+          class="block text-base font-medium text-gray-700"
+          >Muddat (oy):</label
+        >
+        <select
+          id="monthCount"
+          class="w-full md:w-40 text-base border border-indigo-300 rounded-lg p-2 font-semibold text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+        >
+          <option value="12" selected>12 oy</option>
+          <option value="24">24 oy</option>
+          <option value="48">48 oy</option>
+        </select>
+      </section>
+
+      <!-- Oylik to'lov -->
+      <section class="text-center mt-4">
+        <p class="text-gray-600 text-base mb-1">Sizning oylik to‘lovingiz:</p>
+        <p
+          id="monthlyPayment"
+          class="text-indigo-700 font-bold text-3xl tracking-tight"
+        ></p>
+      </section>
+
+      <!-- Orqaga tugmasi -->
+      <div class="text-center mt-6">
+        <a
+          href="/clientIndex"
+          class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium text-base transition"
+        >
+          <i class="ri-arrow-left-line text-xl"></i> Orqaga
+        </a>
+      </div>
+
+      <!-- Buyurtma berish tugmasi -->
+      <div class="text-center">
+        <button
+          class="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold rounded-xl shadow transition"
+          onclick="alert('Buyurtma berildi!')"
+        >
+          <i class="ri-check-line text-xl"></i> Buyurtma berish
+        </button>
+      </div>
+    </main>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const price = <%= JSON.stringify(car.price) %>;
+          const interestRate = 0.10;
+          const downPaymentInput = document.getElementById('downPayment');
+          const monthCountSelect = document.getElementById('monthCount');
+          const monthlyPaymentSpan = document.getElementById('monthlyPayment');
+          const orderBtn = document.getElementById('orderBtn');
+      
+          const userId = <%= user ? JSON.stringify(user.id) : 'null' %>;
+          const carId = <%= JSON.stringify(car.id) %>;
+      
+          if (!userId) {
+            alert('Buyurtma berish uchun tizimga kirishingiz kerak.');
+            orderBtn.disabled = true;
+            return;
+          }
+      
+          function calculateMonthlyPayment() {
+            let downPayment = parseFloat(downPaymentInput.value);
+            console.log('downPayment:', downPayment);
+      
+            if (isNaN(downPayment) || downPayment < 0) downPayment = 0;
+            if (downPayment > price) downPayment = price;
+            downPaymentInput.value = downPayment.toFixed(2);
+      
+            const monthCount = parseInt(monthCountSelect.value);
+            console.log('monthCount:', monthCount);
+      
+            const principal = price - downPayment;
+      
+            const totalInterest = principal * interestRate * (monthCount / 12);
+            const totalToPay = principal + totalInterest;
+            const monthlyPayment = totalToPay / monthCount;
+      
+            console.log('monthlyPayment:', monthlyPayment);
+      
+            monthlyPaymentSpan.textContent = monthlyPayment.toFixed(2) + ' $';
+          }
+      
+          calculateMonthlyPayment();
+      
+          downPaymentInput.addEventListener('input', calculateMonthlyPayment);
+          monthCountSelect.addEventListener('change', calculateMonthlyPayment);
+      
+          orderBtn.addEventListener('click', async () => {
+            const down_payment = parseFloat(downPaymentInput.value);
+            const month_count = parseInt(monthCountSelect.value);
+            const monthly_payment = parseFloat(monthlyPaymentSpan.textContent.replace(' $', ''));
+            const total_price = price;
+            const interest_rate = interestRate;
+            const start_date = new Date().toISOString().slice(0, 10);
+            const end_date = new Date(new Date().setMonth(new Date().getMonth() + month_count)).toISOString().slice(0, 10);
+            const status = 'pending';
+      
+            const creditData = {
+              user_id: userId,
+              car_id: carId,
+              total_price,
+              down_payment,
+              monthly_payment,
+              month_count,
+              interest_rate,
+              start_date,
+              end_date,
+              status
+            };
+      
+            try {
+              const response = await fetch('/api/credit/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(creditData)
+              });
+      
+              if (!response.ok) {
+                const errorData = await response.json();
+                alert('Xatolik: ' + errorData.message);
+                return;
+              }
+      
+              const data = await response.json();
+              alert('Buyurtma muvaffaqiyatli yaratildi! ID: ' + data.credit_id);
+            } catch (err) {
+              alert('Server bilan bog‘lanishda xatolik yuz berdi: ' + err.message);
+            }
+          });
+        });
+      </script>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= user.first_name %> <%= user.last_name %> - Mijoz Profili</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <style>
+      body {
+        background-color: #f3f4f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-4xl mx-auto p-6 sm:p-8 mt-10 space-y-6">
+      <div class="bg-white shadow-xl rounded-2xl p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row items-start gap-8">
+
+          <div class="flex-shrink-0 w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg">
+            <img src="<%= user.avatar %>" alt="Avatar" class="w-full h-full object-cover" />
+          </div>
+
+          <div class="flex-1 text-left mt-2 sm:mt-0">
+            <h2 class="text-4xl font-bold text-gray-900 leading-snug">
+              <%= user.first_name %> <%= user.last_name %>
+            </h2>
+            <p class="text-gray-500 mt-1 text-lg">
+              <%= user.email %> | <%= user.phone %>
+            </p>
+            <p class="text-sm text-gray-400 mt-3">
+              Ro'yxatdan o'tgan sana:
+              <%= new Date(user.created_at).toLocaleDateString('uz-UZ', { day: '2-digit', month: 'long', year: 'numeric' }) %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="ri-map-pin-line text-blue-500"></i> Manzil ma'lumotlari
+          </h3>
+          <ul class="text-gray-700 space-y-2 text-sm">
+            <li><strong>Viloyat:</strong> <%= address?.region || '—' %></li>
+            <li><strong>Shahar/Tuman:</strong> <%= address?.city || '—' %></li>
+            <li><strong>Ko‘cha:</strong> <%= address?.street || '—' %></li>
+            <li><strong>Tavsif:</strong> <%= address?.description || '—' %></li>
+          </ul>
+        </div>
+
+        <div class="bg-white shadow rounded-2xl p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="ri-checkbox-circle-line text-blue-500"></i> Status
+          </h3>
+          <span
+            class="inline-block px-4 py-1.5 rounded-full text-sm font-semibold
+              <% if (user.status === 'active') { %> bg-green-100 text-green-800
+              <% } else if (user.status === 'pending') { %> bg-yellow-100 text-yellow-800
+              <% } else { %> bg-red-100 text-red-800 <% } %>"
+          >
+            <%= user.status === 'active'
+              ? 'Faol'
+              : user.status === 'pending'
+              ? 'Kutilmoqda'
+              : 'Nofaol' %>
+          </span>
+        </div>
+      </div>
+
+      <!-- Kredit ma'lumotlari -->
+      <div class="bg-white shadow rounded-2xl p-6 mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="ri-wallet-line text-blue-500"></i> Kredit holati
+        </h3>
+
+        <% if (hasCredit) { %>
+          <ul class="text-gray-700 space-y-4 text-sm">
+            <% credits.forEach(credit => { %>
+              <li class="border rounded-lg p-4 bg-gray-50">
+                <p><strong>Kredit ID:</strong> <%= credit.id %></p>
+                <p><strong>Avtomobil ID:</strong> <%= credit.car_id %></p>
+                <p><strong>Umumiy summa:</strong> <%= credit.total_price.toLocaleString() %> so'm</p>
+                <p><strong>Oldindan to'lov:</strong> <%= credit.down_payment.toLocaleString() %> so'm</p>
+                <p><strong>Oylik to'lov:</strong> <%= credit.monthly_payment.toLocaleString() %> so'm</p>
+                <p><strong>Muddat:</strong> <%= credit.month_count %> oy</p>
+                <p><strong>Foiz stavkasi:</strong> <%= credit.interest_rate %> %</p>
+                <p><strong>Kredit boshlanish sanasi:</strong> <%= new Date(credit.start_date).toLocaleDateString('uz-UZ') %></p>
+                <p><strong>Kredit tugash sanasi:</strong> <%= new Date(credit.end_date).toLocaleDateString('uz-UZ') %></p>
+                <p><strong>Status:</strong> 
+                  <%= credit.status === 'active' ? 'Faol' : credit.status === 'paid' ? 'To‘langan' : credit.status === 'cancelled' ? 'Bekor qilingan' : 'Kechiktirilgan' %>
+                </p>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p class="text-gray-500 text-sm">Mijozda kredit mavjud emas.</p>
+        <% } %>
+      </div>
+
+      <div class="pt-4">
+        <a href="/clients" class="inline-flex items-center gap-2 text-sm bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-200 hover:bg-blue-700 shadow-md">
+          <i class="ri-arrow-left-line"></i> Orqaga qaytish
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

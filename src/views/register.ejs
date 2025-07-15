@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3B82F6",
+              secondary: "#1E40AF",
+            },
+            borderRadius: {
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div
+      class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div class="max-w-2xl w-full space-y-8">
+        <div class="text-center">
+          <h1 class="font-['Pacifico'] text-3xl font-bold text-primary mb-2">
+            Ro'yxatdan o'tish
+          </h1>
+          <p class="text-gray-600">
+            Yangi hisob yaratish uchun ma'lumotlaringizni kiriting
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-8">
+          <form class="space-y-6" id="registerForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Ism <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="first_name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                  placeholder="Ismingizni kiriting"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Familiya <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="last_name"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                  placeholder="Familiyangizni kiriting"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Email manzil <span class="text-red-500">*</span></label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <i
+                    class="ri-mail-line text-gray-400 text-sm leading-none"
+                  ></i>
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                  placeholder="example@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Telefon raqam <span class="text-red-500">*</span></label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <i
+                    class="ri-phone-line text-gray-400 text-sm leading-none"
+                  ></i>
+                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                  placeholder="+998 90 123 45 67"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Parol <span class="text-red-500">*</span></label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <i
+                    class="ri-lock-line text-gray-400 text-sm leading-none"
+                  ></i>
+                </div>
+                <input
+                  type="password"
+                  id="password"
+                  class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                  placeholder="Parolni kiriting"
+                />
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <i
+                    class="ri-eye-off-line text-gray-400 text-sm leading-none"
+                  ></i>
+                </button>
+              </div>
+              <div class="mt-2">
+                <div class="flex items-center space-x-2">
+                  <div class="flex-1 bg-gray-200 rounded-full h-2">
+                    <div
+                      id="passwordStrength"
+                      class="h-2 rounded-full transition-all duration-300 bg-red-400"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                  <span id="strengthText" class="text-xs text-gray-500"
+                    >Zaif</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t pt-6 mt-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                Manzil ma'lumotlari
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700"
+                    >Viloyat <span class="text-red-500">*</span></label
+                  >
+                  <div class="relative">
+                    <button
+                      type="button"
+                      id="regionSelect"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm text-left bg-white flex items-center justify-between"
+                    >
+                      <span id="regionText" class="text-gray-500"
+                        >Viloyatni tanlang</span
+                      >
+                      <i class="ri-arrow-down-s-line text-gray-400"></i>
+                    </button>
+                    <div
+                      id="regionDropdown"
+                      class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-48 overflow-y-auto"
+                    >
+                      <div class="py-1">
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="toshkent"
+                        >
+                          Toshkent
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="samarqand"
+                        >
+                          Samarqand
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="buxoro"
+                        >
+                          Buxoro
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="andijon"
+                        >
+                          Andijon
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="fargona"
+                        >
+                          Farg'ona
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="namangan"
+                        >
+                          Namangan
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="qashqadaryo"
+                        >
+                          Qashqadaryo
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="surxondaryo"
+                        >
+                          Surxondaryo
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700"
+                    >Shahar <span class="text-red-500">*</span></label
+                  >
+                  <div class="relative">
+                    <button
+                      type="button"
+                      id="citySelect"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm text-left bg-white flex items-center justify-between"
+                    >
+                      <span id="cityText" class="text-gray-500"
+                        >Shaharni tanlang</span
+                      >
+                      <i class="ri-arrow-down-s-line text-gray-400"></i>
+                    </button>
+                    <div
+                      id="cityDropdown"
+                      class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-48 overflow-y-auto"
+                    >
+                      <div class="py-1">
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="toshkent-shahar"
+                        >
+                          Toshkent shahar
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="chirchiq"
+                        >
+                          Chirchiq
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="olmaliq"
+                        >
+                          Olmaliq
+                        </div>
+                        <div
+                          class="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm"
+                          data-value="angren"
+                        >
+                          Angren
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2 mt-6">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Ko'cha manzil <span class="text-red-500">*</span></label
+                >
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-3 flex items-center pointer-events-none"
+                  >
+                    <i class="ri-map-pin-line text-gray-400 text-base"></i>
+                  </div>
+                  <input
+                    type="text"
+                    id="street"
+                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm"
+                    placeholder="Ko'cha nomi va uy raqami"
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-2 mt-6">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Qo'shimcha ma'lumot</label
+                >
+                <textarea
+                  id="description"
+                  rows="3"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-200 text-sm resize-none"
+                  placeholder="Manzil haqida qo'shimcha ma'lumot (ixtiyoriy)"
+                ></textarea>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">
+                  Avatar (profil rasmi)
+                </label>
+                <div class="flex items-center space-x-4">
+                  <div class="w-14 h-14 bg-gray-100 border border-gray-300 rounded-full overflow-hidden">
+                    <img
+                      id="avatarPreview"
+                      src=""
+                      alt="Avatar Preview"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="file"
+                      id="avatar"
+                      accept="image/*"
+                      class="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3 pt-4">
+              <div class="relative">
+                <input type="checkbox" id="terms" class="sr-only" />
+                <div
+                  class="w-5 h-5 border-2 border-gray-300 rounded cursor-pointer flex items-center justify-center transition-all duration-200 hover:border-primary"
+                  id="customCheckbox"
+                >
+                  <i
+                    class="ri-check-line text-white text-xs hidden"
+                    id="checkIcon"
+                  ></i>
+                </div>
+              </div>
+              <label for="terms" class="text-sm text-gray-600 cursor-pointer">
+                Men
+                <a href="#" class="text-primary hover:underline"
+                  >foydalanish shartlari</a
+                >
+                va
+                <a href="#" class="text-primary hover:underline"
+                  >maxfiylik siyosati</a
+                >
+                bilan tanishdim va roziman
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-primary hover:bg-secondary text-white font-medium py-3 px-6 !rounded-button transition-all duration-200 transform hover:scale-[1.02] whitespace-nowrap"
+            >
+              Ro'yxatdan o'tish
+            </button>
+
+            <div class="text-center pt-4">
+              <p class="text-sm text-gray-600">
+                Allaqachon hisobingiz bormi?
+                <a
+                  href="/login"
+                  class="text-primary hover:underline font-medium"
+                  >Kirish</a
+                >
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="/js/register.js"></script>
+  </body>
+</html>

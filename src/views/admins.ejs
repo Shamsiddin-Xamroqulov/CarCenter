@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Center</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563EB",
+              secondary: "#64748B",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              pacifico: ["Pacifico", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Scrollbar stillari */
+      ::-webkit-scrollbar {
+        width: 8px; /* vertikal scrollbar kengligi */
+        height: 8px; /* gorizontal scrollbar balandligi */
+        background-color: #f1f1f1; /* scrollbar fon rangi */
+      }
+      /* RemixIcon default contentini bekor qilish */
+      :where([class^="ri-"])::before {
+        content: initial; /* RemixIcon stilini saqlash uchun */
+      }
+      ::-webkit-scrollbar {
+        color: white;
+        background-color: white;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-inter">
+    <div class="flex h-screen">
+      <div
+        class="w-64 bg-white shadow-lg flex flex-col fixed top-0 left-0 h-full z-40"
+      >
+        <div class="p-6 border-b border-gray-200">
+          <h1 class="text-2xl font-pacifico text-primary">Car Center</h1>
+          <p class="text-sm text-secondary mt-1">We have the best.</p>
+        </div>
+
+        <nav class="flex-1 p-4 overflow-y-auto">
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="/index"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-dashboard-line"></i>
+                </div>
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="/car"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-car-line"></i>
+                </div>
+                Cars
+              </a>
+            </li>
+            <li>
+              <a
+                href="/clients"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-user-line"></i>
+                </div>
+                Clients
+              </a>
+            </li>
+            <li>
+              <a
+                href="/orders"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-shopping-cart-line"></i>
+                </div>
+                Orders
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-money-dollar-circle-line"></i>
+                </div>
+                Payments
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="flex items-center px-4 py-3 text-white bg-primary rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-admin-line"></i>
+                </div>
+                Admins
+              </a>
+            </li>
+            <li>
+              <a
+                href="/profile"
+                class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-user-line"></i>
+                </div>
+                My Profile
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="flex-1 flex flex-col ml-64 w-[calc(100%-16rem)]">
+        <header
+          class="bg-white shadow-sm border-b border-gray-200 px-6 py-4 fixed top-0 left-64 right-0 z-30"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <h2 class="text-xl font-semibold text-gray-800">Adminlar</h2>
+            </div>
+
+            <div class="flex items-center space-x-4">
+              <div class="relative">
+                <input
+                  type="text"
+                  placeholder="Qidirish..."
+                  class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-64"
+                />
+                <div
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center"
+                >
+                  <i class="ri-search-line text-gray-400"></i>
+                </div>
+              </div>
+
+              <button class="relative p-2 text-gray-400 hover:text-gray-600">
+                <div class="w-6 h-6 flex items-center justify-center">
+                  <i class="ri-notification-line"></i>
+                </div>
+                <span
+                  class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                  >3</span
+                >
+              </button>
+
+              <div class="relative">
+                <div
+                  id="profileBtn"
+                  class="flex items-center space-x-3 cursor-pointer select-none"
+                >
+                <div class="w-8 h-8 rounded-full overflow-hidden">
+                  <img src="" alt="User avatar" class="profileImg w-full h-full object-cover" />
+                </div>
+                  <div class="text-sm">
+                    <p class="fName font-medium text-gray-800">Aziz Karimov</p>
+                    <p class="role text-gray-500">Super Admin</p>
+                  </div>
+                  <div
+                    class="w-4 h-4 flex items-center justify-center transition-transform duration-200"
+                    id="arrowIcon"
+                  >
+                    <i class="ri-arrow-down-s-line text-gray-400"></i>
+                  </div>
+                </div>
+
+                <div
+                  id="dropdownMenu"
+                  class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50"
+                >
+                  <ul class="py-1 text-gray-700">
+                    <li>
+                      <a
+                        href="/profile"
+                        class="block px-4 py-2 hover:bg-gray-100 transition-colors"
+                        >Profilni ko‘rish</a
+                      >
+                    </li>
+                    <li>
+                      <hr class="my-1 border-gray-200" />
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        class="block px-4 py-2 text-red-600 hover:bg-red-100 transition-colors"
+                        >Log Out</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="max-w-full mx-0 py-12 my-12 px-5">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10"
+          >
+            <div
+              class="bg-gradient-to-tr from-blue-500 to-blue-600 text-white rounded-2xl shadow-md p-5 relative overflow-hidden"
+            >
+              <div class="absolute top-2 right-3 opacity-10 text-6xl">
+                <i class="ri-team-line"></i>
+              </div>
+              <p class="text-sm font-medium">Jami Administratorlar</p>
+              <h2 class="text-3xl font-bold mt-2">18</h2>
+              <div class="flex items-center mt-4">
+                <span
+                  class="bg-white text-blue-600 text-xs font-semibold px-2 py-1 rounded-full flex items-center"
+                >
+                  <i class="ri-arrow-up-line mr-1"></i> +2
+                </span>
+                <span class="ml-2 text-xs text-white/80"
+                  >Yangi adminlar (joriy oy)</span
+                >
+              </div>
+            </div>
+
+            <div
+              class="bg-gradient-to-tr from-green-500 to-emerald-600 text-white rounded-2xl shadow-md p-5 relative overflow-hidden"
+            >
+              <div class="absolute top-2 right-3 opacity-10 text-6xl">
+                <i class="ri-user-heart-line"></i>
+              </div>
+              <p class="text-sm font-medium">Faol Administratorlar</p>
+              <h2 class="text-3xl font-bold mt-2">15</h2>
+              <div class="flex items-center mt-4">
+                <span
+                  class="bg-white text-green-600 text-xs font-semibold px-2 py-1 rounded-full flex items-center"
+                >
+                  <i class="ri-check-line mr-1"></i> 83.3%
+                </span>
+                <span class="ml-2 text-xs text-white/80">Jami adminlardan</span>
+              </div>
+            </div>
+
+            <div
+              class="bg-white border border-red-100 rounded-2xl shadow-md p-5"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">
+                    Bloklangan Administratorlar
+                  </p>
+                  <h2 class="text-3xl font-bold text-red-600 mt-2">3</h2>
+                </div>
+                <div
+                  class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center"
+                >
+                  <i class="ri-user-unfollow-line text-2xl"></i>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="w-full bg-red-100 rounded-full h-2">
+                  <div
+                    class="bg-red-500 h-2 rounded-full"
+                    style="width: 16.6%"
+                  ></div>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">
+                  Jami adminlarning 16.6%
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="bg-white border border-blue-100 rounded-2xl shadow-md p-5"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">
+                    Yangi Ro'yxatdan O'tganlar
+                  </p>
+                  <h2 class="text-3xl font-bold text-blue-600 mt-2">5</h2>
+                </div>
+                <div
+                  class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"
+                >
+                  <i class="ri-user-add-line text-2xl"></i>
+                </div>
+              </div>
+              <div class="mt-4">
+                <p class="text-xs text-gray-400 mt-1">So‘nggi 7 kunda</p>
+                <div class="flex items-center mt-1">
+                  <span
+                    class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded-full flex items-center"
+                  >
+                    <i class="ri-arrow-up-line mr-1"></i> +2
+                  </span>
+                  <span class="ml-2 text-xs text-gray-500"
+                    >O‘tgan haftaga nisbatan</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-xl shadow-sm border border-gray-200 mb-6"
+          >
+            <div class="p-3 border-b border-gray-200">
+              <div
+                class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center"
+              >
+                <div class="relative flex-1 max-w-md">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <div class="w-5 h-5 flex items-center justify-center">
+                      <i class="ri-search-line text-gray-400"></i>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search administrators..."
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                    id="searchInput"
+                  />
+                </div>
+                <div class="flex gap-3">
+                  <select
+                    class="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent pr-8"
+                    id="statusFilter"
+                  >
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                  <select
+                    class="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent pr-8"
+                    id="roleFilter"
+                  >
+                    <option value="">All Roles</option>
+                    <option value="Super Admin">Super Admin</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Moderator">Moderator</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      data-sort="name"
+                    >
+                      <div class="flex items-center gap-2">
+                        Administrator
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-arrow-up-down-line text-gray-400"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th
+                      class="px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      data-sort="role"
+                    >
+                      <div class="flex items-center gap-2">
+                        Role
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-arrow-up-down-line text-gray-400"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th
+                      class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Contact
+                    </th>
+                    <th
+                      class="px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      data-sort="status"
+                    >
+                      <div class="flex items-center gap-2">
+                        Status
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-arrow-up-down-line text-gray-400"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th
+                      class="px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      data-sort="createdDate"
+                    >
+                      <div class="flex items-center gap-2">
+                        Created Date
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-arrow-up-down-line text-gray-400"></i>
+                        </div>
+                      </div>
+                    </th>
+                    <th
+                      class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="bg-white divide-y divide-gray-200"
+                  id="adminTableBody"
+                >
+                  <% admins.forEach(admin => { %>
+                  <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <!-- Full Name & Email -->
+                    <td class="px-2 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div
+                          class="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm bg-gradient-to-br from-purple-500 to-pink-500"
+                        >
+                          <%= (admin.first_name[0] +
+                          admin.last_name[0]).toUpperCase() %>
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            <%= admin.first_name %> <%= admin.last_name %>
+                          </div>
+                          <div class="text-sm text-gray-500">
+                            <%= admin.email %>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Role -->
+                    <td class="px-2 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= admin.role === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' %>"
+                      >
+                        <%= admin.role === 'super_admin' ? 'Super Admin' :
+                        'Admin' %>
+                      </span>
+                    </td>
+
+                    <!-- Phone & Email -->
+                    <td
+                      class="px-2 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      <div class="flex flex-col gap-1">
+                        <span><%= admin.phone %></span>
+                        <span class="text-gray-500"><%= admin.email %></span>
+                      </div>
+                    </td>
+
+                    <!-- Status (static: Active) -->
+                    <td class="px-2 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                      >
+                        <div
+                          class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5"
+                        ></div>
+                        Active
+                      </span>
+                    </td>
+
+                    <!-- Created Date -->
+                    <td
+                      class="px-2 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      <div class="flex flex-col">
+                        <span>Created</span>
+                        <span class="text-xs text-gray-500">
+                          <%= new
+                          Date(admin.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric', month: 'short', day: 'numeric' }) %>
+                        </span>
+                      </div>
+                    </td>
+
+                    <!-- Action Buttons -->
+                    <td class="px-2 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex items-center gap-2">
+                        <button
+                          class="text-primary hover:text-primary/80 transition-colors !rounded-button whitespace-nowrap"
+                        >
+                          <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-eye-line"></i>
+                          </div>
+                        </button>
+                        <button
+                          class="text-gray-400 hover:text-gray-600 transition-colors !rounded-button whitespace-nowrap"
+                        >
+                          <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-edit-line"></i>
+                          </div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+              Showing <span class="font-medium">1</span> to
+              <span class="font-medium">6</span> of
+              <span class="font-medium">6</span> results
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed !rounded-button whitespace-nowrap"
+                disabled
+              >
+                Previous
+              </button>
+              <button
+                class="px-3 py-2 text-sm font-medium text-white bg-primary border border-primary rounded-lg hover:bg-primary/90 !rounded-button whitespace-nowrap"
+              >
+                1
+              </button>
+              <button
+                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed !rounded-button whitespace-nowrap"
+                disabled
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/profile.js"></script>
+  </body>
+</html>
