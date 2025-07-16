@@ -255,7 +255,37 @@ class ViewsController {
       globalError(err, res);
     }
   }
-  
+  async ClientOrders (req, res) {
+    try {
+      res.render("clientOrders");
+    }catch(err) {
+      globalError(err, res);
+    }
+  }
+  async ClientProfile (req, res) {
+    try {
+      res.render("clientProfile");
+    }catch(err) {
+      globalError(err, res);
+    }
+  }
+  async Payments (req, res) {
+    try {
+      const [payments] = await connectionDb.query(`
+        SELECT * FROM credit_payments;
+      `)
+      res.render("payments", {paymentData: payments});
+    }catch(err) {
+      globalError(err, res);
+    }
+  }
+  async ClientPayments (req, res) {
+    try {
+      res.render("clientPayments");
+    }catch(err) {
+      globalError(err, res);
+    }
+  }
 }
 
 export default new ViewsController();

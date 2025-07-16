@@ -120,8 +120,8 @@
       <!-- Buyurtma berish tugmasi -->
       <div class="text-center">
         <button
+          id="orderBtn"
           class="mt-4 inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold rounded-xl shadow transition"
-          onclick="alert('Buyurtma berildi!')"
         >
           <i class="ri-check-line text-xl"></i> Buyurtma berish
         </button>
@@ -129,93 +129,93 @@
     </main>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-          const price = <%= JSON.stringify(car.price) %>;
-          const interestRate = 0.10;
-          const downPaymentInput = document.getElementById('downPayment');
-          const monthCountSelect = document.getElementById('monthCount');
-          const monthlyPaymentSpan = document.getElementById('monthlyPayment');
-          const orderBtn = document.getElementById('orderBtn');
-      
-          const userId = <%= user ? JSON.stringify(user.id) : 'null' %>;
-          const carId = <%= JSON.stringify(car.id) %>;
-      
-          if (!userId) {
-            alert('Buyurtma berish uchun tizimga kirishingiz kerak.');
-            orderBtn.disabled = true;
-            return;
-          }
-      
-          function calculateMonthlyPayment() {
-            let downPayment = parseFloat(downPaymentInput.value);
-            console.log('downPayment:', downPayment);
-      
-            if (isNaN(downPayment) || downPayment < 0) downPayment = 0;
-            if (downPayment > price) downPayment = price;
-            downPaymentInput.value = downPayment.toFixed(2);
-      
-            const monthCount = parseInt(monthCountSelect.value);
-            console.log('monthCount:', monthCount);
-      
-            const principal = price - downPayment;
-      
-            const totalInterest = principal * interestRate * (monthCount / 12);
-            const totalToPay = principal + totalInterest;
-            const monthlyPayment = totalToPay / monthCount;
-      
-            console.log('monthlyPayment:', monthlyPayment);
-      
-            monthlyPaymentSpan.textContent = monthlyPayment.toFixed(2) + ' $';
-          }
-      
-          calculateMonthlyPayment();
-      
-          downPaymentInput.addEventListener('input', calculateMonthlyPayment);
-          monthCountSelect.addEventListener('change', calculateMonthlyPayment);
-      
-          orderBtn.addEventListener('click', async () => {
-            const down_payment = parseFloat(downPaymentInput.value);
-            const month_count = parseInt(monthCountSelect.value);
-            const monthly_payment = parseFloat(monthlyPaymentSpan.textContent.replace(' $', ''));
-            const total_price = price;
-            const interest_rate = interestRate;
-            const start_date = new Date().toISOString().slice(0, 10);
-            const end_date = new Date(new Date().setMonth(new Date().getMonth() + month_count)).toISOString().slice(0, 10);
-            const status = 'pending';
-      
-            const creditData = {
-              user_id: userId,
-              car_id: carId,
-              total_price,
-              down_payment,
-              monthly_payment,
-              month_count,
-              interest_rate,
-              start_date,
-              end_date,
-              status
-            };
-      
-            try {
-              const response = await fetch('/api/credit/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(creditData)
-              });
-      
-              if (!response.ok) {
-                const errorData = await response.json();
-                alert('Xatolik: ' + errorData.message);
-                return;
-              }
-      
-              const data = await response.json();
-              alert('Buyurtma muvaffaqiyatli yaratildi! ID: ' + data.credit_id);
-            } catch (err) {
-              alert('Server bilan bog‘lanishda xatolik yuz berdi: ' + err.message);
+      window.addEventListener('DOMContentLoaded', () => {
+        const price = <%= car.price %>;
+        const interestRate = 0.10;
+        const downPaymentInput = document.getElementById('downPayment');
+        const monthCountSelect = document.getElementById('monthCount');
+        const monthlyPaymentSpan = document.getElementById('monthlyPayment');
+        const orderBtn = document.getElementById('orderBtn');
+
+        const userId = <%- user ? user.id : null %>;
+        const carId = <%= car.user_id %>;
+
+        if (!userId) {
+          alert('Buyurtma berish uchun tizimga kirishingiz kerak.');
+          orderBtn.disabled = true;
+          return;
+        }
+
+        function calculateMonthlyPayment() {
+          let downPayment = parseFloat(downPaymentInput.value);
+          console.log('downPayment:', downPayment);
+
+          if (isNaN(downPayment) || downPayment < 0) downPayment = 0;
+          if (downPayment > price) downPayment = price;
+          downPaymentInput.value = downPayment.toFixed(2);
+
+          const monthCount = parseInt(monthCountSelect.value);
+          console.log('monthCount:', monthCount);
+
+          const principal = price - downPayment;
+
+          const totalInterest = principal * interestRate * (monthCount / 12);
+          const totalToPay = principal + totalInterest;
+          const monthlyPayment = totalToPay / monthCount;
+
+          // console.log('monthlyPayment:', monthlyPayment);
+
+          monthlyPaymentSpan.textContent = monthlyPayment.toFixed(2) + ' $';
+        }
+
+        calculateMonthlyPayment();
+
+        downPaymentInput.addEventListener('input', calculateMonthlyPayment);
+        monthCountSelect.addEventListener('change', calculateMonthlyPayment);
+
+        orderBtn.addEventListener('click', async () => {
+          const down_payment = parseFloat(downPaymentInput.value);
+          const month_count = parseInt(monthCountSelect.value);
+          const monthly_payment = parseFloat(monthlyPaymentSpan.textContent.replace(' $', ''));
+          const total_price = price;
+          const interest_rate = interestRate;
+          const start_date = new Date().toISOString().slice(0, 10);
+          const end_date = new Date(new Date().setMonth(new Date().getMonth() + month_count)).toISOString().slice(0, 10);
+          const status = 'pending';
+
+          const creditData = {
+            user_id: userId,
+            car_id: carId,
+            total_price,
+            down_payment,
+            monthly_payment,
+            month_count,
+            interest_rate,
+            start_date,
+            end_date,
+            status
+          };
+
+          try {
+            const response = await fetch('/api/credit/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(creditData)
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              alert('Xatolik: ' + errorData.message);
+              return;
             }
-          });
+
+            const data = await response.json();
+            alert('Buyurtma muvaffaqiyatli yaratildi! ID: ' + data.credit_id);
+          } catch (err) {
+            alert('Server bilan bog‘lanishda xatolik yuz berdi: ' + err.message);
+          }
         });
-      </script>
+      });
+    </script>
   </body>
 </html>

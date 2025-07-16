@@ -127,4 +127,4 @@ document.addEventListener("DOMContentLoaded", function () {
   
   profileName.textContent = `${user.first_name} ${user.last_name}`;
   profileRole.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase();
-  profileIamge.src = user.avatar;
+  profileIamge.src = user.avatar;q

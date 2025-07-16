@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Center</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563EB",
+              secondary: "#64748B",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+              pacifico: ["Pacifico", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      ::-webkit-scrollbar {
+        background-color: white;
+      }
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-inter">
+    <!-- Sidebar (Fixed) -->
+    <div
+      class="w-64 bg-white shadow-lg flex flex-col fixed top-0 left-0 h-screen z-30"
+    >
+      <!-- Logo -->
+      <div class="p-6 border-b border-gray-200">
+        <h1 class="text-2xl font-pacifico text-primary">Car Center</h1>
+        <p class="text-sm text-secondary mt-1">We have the best.</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 p-4 overflow-y-auto">
+        <ul class="space-y-2">
+          <li>
+            <a
+              href="/clientIndex"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-car-line"></i>
+              </div>
+              Products
+            </a>
+          </li>
+          <li>
+            <a
+              href="/orders"
+              class="flex items-center px-4 py-3 text-white bg-primary rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-shopping-cart-line"></i>
+              </div>
+              My Orders
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-money-dollar-circle-line"></i>
+              </div>
+              My Payments
+            </a>
+          </li>
+          <li>
+            <a
+              href="/clientProfile"
+              class="flex items-center px-4 py-3 text-secondary hover:bg-gray-100 rounded-lg"
+            >
+              <div class="w-5 h-5 flex items-center justify-center mr-3">
+                <i class="ri-user-line"></i>
+              </div>
+              My Profile
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex flex-col h-screen">
+      <!-- Header (Fixed) -->
+      <header
+        class="bg-white shadow-sm border-b border-gray-200 px-6 py-4 fixed top-0 left-64 right-0 z-20"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <h2 class="text-xl font-semibold text-gray-800">Cars</h2>
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <!-- Search -->
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Qidirish..."
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-64"
+              />
+              <div
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center"
+              >
+                <i class="ri-search-line text-gray-400"></i>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <button class="relative p-2 text-gray-400 hover:text-gray-600">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-notification-line"></i>
+              </div>
+              <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >3</span
+              >
+            </button>
+
+            <!-- Profile -->
+            <div class="relative">
+              <div
+                  id="profileBtn"
+                  class="flex items-center space-x-3 cursor-pointer select-none"
+                >
+                <div class="w-8 h-8 rounded-full overflow-hidden">
+                  <img src="" alt="User avatar" class="profileImg w-full h-full object-cover" />
+                </div>
+                  <div class="text-sm">
+                    <p class="fName font-medium text-gray-800">Aziz Karimov</p>
+                    <p class="role text-gray-500">Super Admin</p>
+                  </div>
+                  <div
+                    class="w-4 h-4 flex items-center justify-center transition-transform duration-200"
+                    id="arrowIcon"
+                  >
+                    <i class="ri-arrow-down-s-line text-gray-400"></i>
+                  </div>
+                </div>
+
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50"
+              >
+                <ul class="py-1 text-gray-700">
+                  <li>
+                    <a
+                      href="/clientProfile"
+                      class="block px-4 py-2 hover:bg-gray-100 transition-colors"
+                      >Profilni ko‘rish</a
+                    >
+                  </li>
+                  <li>
+                    <hr class="my-1 border-gray-200" />
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-red-600 hover:bg-red-100 transition-colors"
+                      >Log Out</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <div class="min-h-screen my-12 py-10">
+        <div class="p-6">
+          <!-- Statistics Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Jami buyurtmalar -->
+            <div class="bg-gradient-to-tr from-blue-500 to-blue-600 text-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+              <div class="absolute top-2 right-2 opacity-10 text-6xl">
+                <i class="ri-shopping-cart-2-line"></i>
+              </div>
+              <p class="text-sm font-medium">Jami buyurtmalar</p>
+              <h2 class="text-3xl font-bold mt-2">1,247</h2>
+              <div class="flex items-center mt-4">
+                <span class="bg-white text-blue-600 text-xs px-2 py-1 rounded-full flex items-center">
+                  <i class="ri-arrow-up-line mr-1"></i> +5.3%
+                </span>
+                <span class="ml-2 text-xs opacity-80">O'tgan haftaga nisbatan</span>
+              </div>
+            </div>
+          
+            <!-- Umumiy tushum -->
+            <div class="bg-gradient-to-tr from-green-500 to-emerald-600 text-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+              <div class="absolute top-2 right-2 opacity-10 text-6xl">
+                <i class="ri-bank-card-line"></i>
+              </div>
+              <p class="text-sm font-medium">Umumiy tushum</p>
+              <h2 class="text-3xl font-bold mt-2">₽ 2,847,500</h2>
+              <div class="flex items-center mt-4">
+                <span class="bg-white text-green-600 text-xs px-2 py-1 rounded-full flex items-center">
+                  <i class="ri-arrow-up-line mr-1"></i> +12.8%
+                </span>
+                <span class="ml-2 text-xs opacity-80">O'sish sur'ati</span>
+              </div>
+            </div>
+          
+            <!-- To'liq to'langan -->
+            <div class="bg-white border border-emerald-100 rounded-2xl shadow-md p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">To'liq to'langan</p>
+                  <h2 class="text-3xl font-bold text-emerald-600 mt-2">892</h2>
+                </div>
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                  <i class="ri-checkbox-circle-line text-2xl"></i>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="w-full bg-emerald-100 rounded-full h-2">
+                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 72%"></div>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">72% umumiydan</p>
+              </div>
+            </div>
+          
+            <!-- Kechikkan to'lovlar -->
+            <div class="bg-white border border-red-100 rounded-2xl shadow-md p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-gray-500">Kechikkan to'lovlar</p>
+                  <h2 class="text-3xl font-bold text-red-600 mt-2">47</h2>
+                </div>
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                  <i class="ri-error-warning-line text-2xl"></i>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="w-full bg-red-100 rounded-full h-2">
+                  <div class="bg-red-500 h-2 rounded-full" style="width: 28%"></div>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">28% hali to'lanmagan</p>
+              </div>
+            </div>
+          </div>
+                    
+
+          <!-- Search and Filters -->
+          <div class="bg-white rounded-lg shadow-sm border mb-6">
+            <div class="p-6">
+              <div
+                class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between"
+              >
+                <div class="flex-1 max-w-md">
+                  <div class="relative">
+                    <div
+                      class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                    >
+                      <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-search-line text-gray-400"></i>
+                      </div>
+                    </div>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      placeholder="Ism, telefon yoki model bo'yicha qidirish..."
+                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    class="filter-btn active px-4 py-2 text-sm font-medium rounded-button border whitespace-nowrap"
+                    data-filter="all"
+                  >
+                    Barcha buyurtmalar
+                  </button>
+                  <button
+                    class="filter-btn px-4 py-2 text-sm font-medium rounded-button border whitespace-nowrap"
+                    data-filter="active"
+                  >
+                    Aktiv
+                  </button>
+                  <button
+                    class="filter-btn px-4 py-2 text-sm font-medium rounded-button border whitespace-nowrap"
+                    data-filter="cancelled"
+                  >
+                    Bekor qilingan
+                  </button>
+                  <button
+                    class="filter-btn px-4 py-2 text-sm font-medium rounded-button border whitespace-nowrap"
+                    data-filter="overdue"
+                  >
+                    Kechikkan
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Mijoz
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Telefon
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Motosikl
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Yili
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Umumiy narx
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Muddat
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Oylik to'lov
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Amallar
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  class="bg-white divide-y divide-gray-200"
+                  id="ordersTableBody"
+                >
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        Abdullayev Jamshid
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      +998 90 123 45 67
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      Honda CBR 600RR
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      2023
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 450,000
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      24 oy
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 18,750
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"
+                      >
+                        To'langan
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-primary hover:text-blue-700 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-eye-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-900 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-edit-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-red-600 hover:text-red-900">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-delete-bin-line"></i>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        Karimova Nodira
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      +998 91 234 56 78
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      Yamaha YZF-R3
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      2022
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 320,000
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      18 oy
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 17,778
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                      >
+                        Kutilmoqda
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-primary hover:text-blue-700 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-eye-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-900 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-edit-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-red-600 hover:text-red-900">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-delete-bin-line"></i>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        Toshmatov Sardor
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      +998 93 345 67 89
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      Kawasaki Ninja 400
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      2023
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 380,000
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      12 oy
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 31,667
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800"
+                      >
+                        Kechikkan
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-primary hover:text-blue-700 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-eye-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-900 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-edit-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-red-600 hover:text-red-900">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-delete-bin-line"></i>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        Rahimova Gulnoza
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      +998 94 456 78 90
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      Suzuki GSX-R750
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      2021
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 520,000
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      36 oy
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 14,444
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800"
+                      >
+                        Aktiv
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-primary hover:text-blue-700 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-eye-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-900 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-edit-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-red-600 hover:text-red-900">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-delete-bin-line"></i>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">
+                        Nazarov Bobur
+                      </div>
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      +998 95 567 89 01
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      Ducati Panigale V2
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      2024
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 850,000
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      48 oy
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                      ₽ 17,708
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800"
+                      >
+                        Bekor qilingan
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-primary hover:text-blue-700 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-eye-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-gray-600 hover:text-gray-900 mr-3">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-edit-line"></i>
+                        </div>
+                      </button>
+                      <button class="text-red-600 hover:text-red-900">
+                        <div class="w-4 h-4 flex items-center justify-center">
+                          <i class="ri-delete-bin-line"></i>
+                        </div>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+            >
+              <div class="flex-1 flex justify-between sm:hidden">
+                <button
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Oldingi
+                </button>
+                <button
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Keyingi
+                </button>
+              </div>
+              <div
+                class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+              >
+                <div>
+                  <p class="text-sm text-gray-700">
+                    Ko'rsatilmoqda <span class="font-medium">1</span> dan
+                    <span class="font-medium">5</span> gacha, jami
+                    <span class="font-medium">1,247</span> ta natija
+                  </p>
+                </div>
+                <div>
+                  <nav
+                    class="relative z-0 inline-flex rounded-button shadow-sm -space-x-px"
+                    aria-label="Pagination"
+                  >
+                    <button
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-button border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-arrow-left-s-line"></i>
+                      </div>
+                    </button>
+                    <button
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      1
+                    </button>
+                    <button
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary text-sm font-medium text-white"
+                    >
+                      2
+                    </button>
+                    <button
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      3
+                    </button>
+                    <button
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-button border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-arrow-right-s-line"></i>
+                      </div>
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/orders.js"></script>
+  </body>
+</html>

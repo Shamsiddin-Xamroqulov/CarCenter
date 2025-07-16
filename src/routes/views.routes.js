@@ -16,5 +16,9 @@ viewsRouter.get("/clients/:id", viewsController.ClientDetails);
 viewsRouter.get("/clientIndex", viewsController.ClientIndex);
 viewsRouter.get("/clientCarDetails/:id", viewsController.ClientCarDetails);
 viewsRouter.get("/clientCredits/:id", viewsController.ClientCredits);
+viewsRouter.get("/clientOrders", viewsController.ClientOrders);
+viewsRouter.get("/clientProfile", viewsController.ClientProfile);
+viewsRouter.get("/payments", viewsController.Payments);
+viewsRouter.get("/clientPayments", viewsController.ClientPayments);
 
 export default viewsRouter;

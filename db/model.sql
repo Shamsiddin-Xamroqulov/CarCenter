@@ -235,13 +235,12 @@ SELECT * FROM models;
 
 SELECt * FROM carImages;
 
-SELECT * FROM admins
+SELECT * FROM admins;
 
 SELECT * FROM car_credits;
 
 SELECT * FROM credit_payments;
 
-SELECT * FROM admins;
 
 
 
